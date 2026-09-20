@@ -1,0 +1,57 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.WYRE-AI/cisco-umbrella-mcp",
+  "title": "Cisco Umbrella",
+  "description": "MCP server for Cisco Umbrella's deployment, admin, policy, reporting, and investigate APIs.",
+  "repository": {
+    "url": "https://github.com/WYRE-AI/cisco-umbrella-mcp",
+    "source": "github"
+  },
+  "version": "0.0.0",
+  "websiteUrl": "https://github.com/WYRE-AI/cisco-umbrella-mcp",
+  "packages": [
+    {
+      "registryType": "oci",
+      "identifier": "ghcr.io/wyre-ai/cisco-umbrella-mcp:0.0.0",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "CISCOUMBRELLA_API_KEY",
+          "description": "Cisco Umbrella API Key, from Admin > API Keys (or Console Settings > API Keys for Multi-org/MSP) in the Umbrella admin console.",
+          "isRequired": true,
+          "format": "string"
+        },
+        {
+          "name": "CISCOUMBRELLA_API_SECRET",
+          "description": "Cisco Umbrella API Secret paired with the API Key. Shown only once at creation and cannot be retrieved later.",
+          "isRequired": true,
+          "isSecret": true,
+          "format": "string"
+        },
+        {
+          "name": "MCP_TRANSPORT",
+          "description": "Transport mode for the server. Set to 'stdio' for local CLI use; the image defaults to 'http' for gateway hosting.",
+          "isRequired": false,
+          "default": "stdio",
+          "format": "string"
+        },
+        {
+          "name": "AUTH_MODE",
+          "description": "Credential source: 'env' reads vars locally, 'gateway' expects header injection from the WYRE MCP Gateway.",
+          "isRequired": false,
+          "default": "env",
+          "format": "string"
+        },
+        {
+          "name": "LOG_LEVEL",
+          "description": "Log verbosity: debug, info, warn, error",
+          "isRequired": false,
+          "default": "info",
+          "format": "string"
+        }
+      ]
+    }
+  ]
+}
