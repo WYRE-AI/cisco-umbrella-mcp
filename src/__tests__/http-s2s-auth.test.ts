@@ -217,7 +217,6 @@ describe('HTTP startup', () => {
     'replace-with-a-real-secret',
     'changeme',
     'change-me',
-    'placeholder',
     'replace-me',
     's2s-secret',
     'your-secret',
@@ -241,23 +240,26 @@ describe('HTTP startup', () => {
     }
   });
 
-  it.each(['secret', 'example'])('refuses the short placeholder %s without echoing the value', async (placeholder) => {
-    process.env.CONDUIT_S2S_SECRET = placeholder;
-    const logs = captureStderr();
-    const exit = exitSpy();
+  it.each(['secret', 'example', 'placeholder'])(
+    'refuses the short placeholder %s without echoing the value',
+    async (placeholder) => {
+      process.env.CONDUIT_S2S_SECRET = placeholder;
+      const logs = captureStderr();
+      const exit = exitSpy();
 
-    try {
-      await expect(startHttpServer()).rejects.toThrow('process.exit:1');
-      const text = logs.text();
-      expect(text).toContain('known placeholder');
-      expect(text).not.toMatch(new RegExp(`CONDUIT_S2S_SECRET[=:].*${placeholder}`, 'i'));
-      expect(text).not.toContain(`"${placeholder}"`);
-      expect(text).not.toContain(`'${placeholder}'`);
-    } finally {
-      exit.mockRestore();
-      logs.restore();
-    }
-  });
+      try {
+        await expect(startHttpServer()).rejects.toThrow('process.exit:1');
+        const text = logs.text();
+        expect(text).toContain('known placeholder');
+        expect(text).not.toMatch(new RegExp(`CONDUIT_S2S_SECRET[=:].*${placeholder}`, 'i'));
+        expect(text).not.toContain(`"${placeholder}"`);
+        expect(text).not.toContain(`'${placeholder}'`);
+      } finally {
+        exit.mockRestore();
+        logs.restore();
+      }
+    },
+  );
 
   it('refuses a placeholder even when MCP_ALLOW_INSECURE_DEV=1 and does not log it', async () => {
     process.env.CONDUIT_S2S_SECRET = '  Your-S2S-Secret  ';
